@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "704474880095",
+    "project_id": "merve-2fd31",
+    "storage_bucket": "merve-2fd31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704474880095:android:f940cd555e8e18e90063ea",
+        "android_client_info": {
+          "package_name": "com.example.odev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704474880095-vga0ltg406h9f5ljsmchj6qpeq4jk8q0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD73CeUUpV2rqQjarNp4zJIP-VP9Nm4xY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704474880095-vga0ltg406h9f5ljsmchj6qpeq4jk8q0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
