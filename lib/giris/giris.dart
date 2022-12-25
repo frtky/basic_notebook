@@ -1,7 +1,12 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:odev/anasayfa/anasayfa.dart';
 import 'package:odev/kayit/kayit.dart';
+import 'package:odev/navigator.dart';
 import 'package:odev/servisler/auth.dart';
+import 'package:odev/snackbar.dart';
 
 class girisekran extends StatefulWidget {
   const girisekran({super.key});
@@ -14,6 +19,33 @@ class _girisekranState extends State<girisekran> {
   authservisi _autservisi = authservisi();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
+  bool _isLoading = false;
+  Future<void> gir() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String? res;
+
+    res = (await _autservisi.giris(_email.text, _password.text)) as String;
+
+    if (res == 'success') {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => navigator_ekran(
+                    uid: FirebaseAuth.instance.currentUser!.uid,
+                  )));
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      showSnackBar(context, res);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,57 +206,53 @@ class _girisekranState extends State<girisekran> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: MediaQuery.of(
-                          context,
-                        ).size.width,
-                        padding: EdgeInsets.symmetric(
-                          vertical: 15,
-                        ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              15,
-                            ),
+                      InkWell(
+                        onTap: gir,
+                        child: Container(
+                          width: MediaQuery.of(
+                            context,
+                          ).size.width,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 15,
                           ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.shade200,
-                                offset: Offset(2, 4),
-                                blurRadius: 5,
-                                spreadRadius: 2),
-                          ],
-                          gradient: const LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Colors.blue,
-                              Colors.lightBlue,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(
+                                15,
+                              ),
+                            ),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey.shade200,
+                                  offset: Offset(2, 4),
+                                  blurRadius: 5,
+                                  spreadRadius: 2),
                             ],
-                          ),
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            _autservisi
-                                .giris(_email.toString(), _password.toString())
-                                .then((value) => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => anasayfaekran(
-                                              uid: value!.uid,
-                                            ))));
-                          },
-                          child: const Text(
-                            'GİRİŞ YAPIN',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
+                            gradient: const LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.blue,
+                                Colors.lightBlue,
+                              ],
                             ),
                           ),
+                          child: !_isLoading
+                              ? const Text(
+                                  'GİRİŞ YAPIN',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const SpinKitWave(
+                                  color: Colors.white,
+                                  size: 25.0,
+                                ),
                         ),
                       ),
                       const SizedBox(

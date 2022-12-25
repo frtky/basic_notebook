@@ -5,15 +5,15 @@ import 'package:odev/not/postcard.dart';
 import 'package:odev/not_ekle/not_ekle.dart';
 import 'package:odev/servisler/auth.dart';
 
-class anasayfaekran extends StatefulWidget {
+class cop_ekran extends StatefulWidget {
   final String uid;
-  const anasayfaekran({super.key, required this.uid});
+  const cop_ekran({super.key, required this.uid});
 
   @override
-  State<anasayfaekran> createState() => _anasayfaekranState();
+  State<cop_ekran> createState() => _cop_ekranState();
 }
 
-class _anasayfaekranState extends State<anasayfaekran> {
+class _cop_ekranState extends State<cop_ekran> {
   authservisi _autservisi = authservisi();
   @override
   Widget build(BuildContext context) {
@@ -22,12 +22,12 @@ class _anasayfaekranState extends State<anasayfaekran> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: Padding(
-          padding: const EdgeInsets.only(left: 40),
+          padding: const EdgeInsets.all(20),
           child: Center(
             child: RichText(
               textAlign: TextAlign.center,
               text: const TextSpan(
-                text: 'M',
+                text: 'T',
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
@@ -35,30 +35,16 @@ class _anasayfaekranState extends State<anasayfaekran> {
                 ),
                 children: [
                   TextSpan(
-                    text: 'Y',
+                    text: 'R',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 30,
                     ),
                   ),
                   TextSpan(
-                    text: ' N',
+                    text: 'A',
                     style: TextStyle(
                       color: Colors.blue,
-                      fontSize: 30,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'O',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'T',
-                    style: TextStyle(
-                      color: Colors.lightBlue,
                       fontSize: 30,
                     ),
                   ),
@@ -69,27 +55,24 @@ class _anasayfaekranState extends State<anasayfaekran> {
                       fontSize: 30,
                     ),
                   ),
+                  TextSpan(
+                    text: 'H',
+                    style: TextStyle(
+                      color: Colors.lightBlue,
+                      fontSize: 30,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        actions: [
-          IconButton(
-              color: Colors.black,
-              onPressed: () {
-                _autservisi.cikis();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => girisekran()));
-              },
-              icon: Icon(Icons.output))
-        ],
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('post')
             .where('id', isEqualTo: widget.uid)
-            .where("silme", isEqualTo: true)
+            .where("silme", isEqualTo: false)
             .snapshots(),
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {

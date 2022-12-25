@@ -1,8 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:odev/anasayfa/anasayfa.dart';
 import 'package:odev/giris/giris.dart';
+import 'package:odev/navigator.dart';
 import 'package:odev/servisler/auth.dart';
+
+import '../snackbar.dart';
 
 // ignore: camel_case_types
 class kayitekran extends StatefulWidget {
@@ -18,6 +22,34 @@ class _kayitekranState extends State<kayitekran> {
   TextEditingController _password = TextEditingController();
 
   authservisi _autservis = authservisi();
+  bool _isLoading = false;
+  Future<void> gir() async {
+    setState(() {
+      _isLoading = true;
+    });
+    String? res;
+
+    res = (await _autservis.kayit(_email.text, _password.text)) as String;
+
+    if (res == 'success') {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => navigator_ekran(
+                    uid: FirebaseAuth.instance.currentUser!.uid,
+                  )));
+      setState(() {
+        _isLoading = false;
+      });
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      showSnackBar(context, res);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -180,54 +212,50 @@ class _kayitekranState extends State<kayitekran> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: MediaQuery.of(
-                          context,
-                        ).size.width,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                        ),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(
-                              15,
-                            ),
+                      InkWell(
+                        onTap: gir,
+                        child: Container(
+                          width: MediaQuery.of(
+                            context,
+                          ).size.width,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 15,
                           ),
-                          boxShadow: <BoxShadow>[
-                            BoxShadow(
-                                color: Colors.grey.shade200,
-                                offset: Offset(2, 4),
-                                blurRadius: 5,
-                                spreadRadius: 2),
-                          ],
-                          gradient: const LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Colors.blue,
-                              Colors.lightBlue,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(
+                                15,
+                              ),
+                            ),
+                            boxShadow: <BoxShadow>[
+                              BoxShadow(
+                                  color: Colors.grey.shade200,
+                                  offset: Offset(2, 4),
+                                  blurRadius: 5,
+                                  spreadRadius: 2),
                             ],
-                          ),
-                        ),
-                        child: InkWell(
-                          onTap: () async {
-                            await _autservis
-                                .kayit(_email.text, _password.text)
-                                .then((value) => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => anasayfaekran(
-                                              uid: value!.uid,
-                                            ))));
-                          },
-                          child: const Text(
-                            'KAYIT OL',
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
+                            gradient: const LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Colors.blue,
+                                Colors.lightBlue,
+                              ],
                             ),
                           ),
+                          child: !_isLoading
+                              ? const Text(
+                                  'KAYIT OL',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const SpinKitWave(
+                                  color: Colors.white,
+                                  size: 25.0,
+                                ),
                         ),
                       ),
                       const SizedBox(

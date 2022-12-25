@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:odev/anasayfa/anasayfa.dart';
 import 'package:odev/giris/giris.dart';
 import 'package:odev/kayit/kayit.dart';
+import 'package:odev/navigator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
       ),
       home: FirebaseAuth.instance.currentUser?.uid == null
           ? const girisekran()
-          : anasayfaekran(uid: FirebaseAuth.instance.currentUser!.uid),
+          : navigator_ekran(uid: FirebaseAuth.instance.currentUser!.uid),
     );
   }
 }
